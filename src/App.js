@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import OschContract from '../build/contracts/OpenSourceChainToken3.json'
-import getWeb3 from './utils/getWeb3'
+//import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
+//import OschContract from '../build/contracts/OpenSourceChainToken3.json'
 import Tx from 'ethereumjs-tx'
-import {updateWeb3} from './utils/getWeb3'
+import {updateWeb3, getWeb3} from './utils/getWeb3'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -11,13 +10,6 @@ import './css/pure-min.css'
 import './css/style.css'
 import './App.css'
 
-function Page(props){
-    return <FirstPage/>
-}
-
-function FirstPage(props) {
-  return <h1></h1>
-}
 class App extends Component {
   constructor(props) {
     super(props)
@@ -57,6 +49,7 @@ class App extends Component {
     // See utils/getWeb3 for more info.
     getWeb3
     .then(results => {
+      console.log(results);
       this.setState({
         web3: results.web3
       })
@@ -69,13 +62,13 @@ class App extends Component {
   }
   //web3远程地址改变则更新
   web3TypeChange(event){
-    //var _this = this;
-    //var uWeb3 = updateWeb3(event.target.value);
-    //this.setState({
-    //  web3: uWeb3   
-    //},()=>{
-    //  _this.instantiateContract();
-    //})
+    var _this = this;
+    var uWeb3 = updateWeb3(event.target.value);
+    this.setState({
+     web3: uWeb3   
+    },()=>{
+     _this.instantiateContract();
+    })
   }
   instantiateContract() {
     //_web3.eth.defaultAccount =  '0xe06e4c820c1bc1f36a17bfdfdf0fea0b6992267b';
@@ -115,7 +108,7 @@ class App extends Component {
       var sendPrivate= this.state.sendPrivate;
       var contactAddress= this.state.contactAddress;
       var drecAddress = this.state.drecAddress;
-      if(sendAddress==''||sendPrivate==''||contactAddress==''||drecAddress==''){
+      if(sendAddress===''||sendPrivate===''||contactAddress===''||drecAddress===''){
         alert('有字段为空');
         return;
       }
@@ -187,7 +180,7 @@ class App extends Component {
     //发送签名交易，不要以太坊节点签名
     var tran = _web3.eth.sendSignedTransaction('0x' + serializedTx)
     tran.on('confirmation', (confirmationNumber, receipt) => {
-      //console.log('confirmation: ' + confirmationNumber);
+      console.log('confirmation: ' + confirmationNumber);
     });
     tran.on('transactionHash', hash => {
         console.log('hash');
